@@ -1,0 +1,30 @@
+{
+  "summary": "Zelador Pro agora 100% OFFLINE testado via web preview (viewport 390x844). Capturado tráfego de rede durante toda a sessão: 0 chamadas para /api — todas as telas usam /app/frontend/src/localdb.ts (AsyncStorage) conforme esperado. Home: 9 action-* cards renderizados; stats (tasks-today/done/pending/occurrences/keys-pending) presentes; após salvar inspeção home-alert-lamps aparece (lâmpadas>0). Andares: 14 floor-card-N renderizados; abrir floor-card-4 → item-*-status-problema (ilum.) → qty-plus x3 → save-inspection → OK. Histórico 'Mês' mostra 3 lâmpadas queimadas, 1 Elétrica, 1 Ocorrência aberta, 1 Chave. Chaves: filtros keys-filter-all/pending/returned OK; btn-new-checkout + field-employee_name/company/apartment/key_identifier/reason + submit-checkout cria card 'Em posse'; abrir card + return-receiver + submit-return → 'Devolvida'. Rotina: btn-new-task → task-name → submit-task cria tarefa; task-*-toggle alterna; task-*-del presente. Ocorrências: btn-new-occ + occ-title + occ-prio-urgente + submit-occ cria ocorrência. Histórico: hist-period-daily/weekly/monthly visíveis e trocam. Persistência: após reload do navegador, home-alert-lamps continua visível e a chave Maria TEST segue no /chaves. Nenhuma red screen do RN. Dependências expo-av/barcode/background-fetch NÃO estão em uso (verificadas no package.json pela iteração 1).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Chaves (FAB) e outras com sombra", "issues": ["Console warn: '\"shadow*\" style props are deprecated. Use \"boxShadow\".' — em /app/frontend/app/(tabs)/chaves.tsx linhas ~236-240 (shadowColor/shadowOpacity/shadowRadius/shadowOffset). Trocar por boxShadow no web ou usar Platform.select para evitar o warning no RN Web."]}
+    ],
+    "react_native_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_1.json", "/app/backend/tests/test_zelador.py"],
+  "action_items": [
+    "LOW: Após salvar inspeção e voltar via floor-back para /andares, o badge testID floor-badge-N pode levar >1-2s para aparecer (depende do refetch da query ['floors']). O stat e o alerta na Home atualizam corretamente, então a mudança de dado se propaga; apenas a lista de andares não reflete imediatamente. Considerar invalidateQueries + refetch sincronizado ou staleTime menor para ['floors'].",
+    "LOW: Substituir shadow* por boxShadow (ou Platform.select) para remover o warning no RN Web em chaves.tsx (fabPrimary) e outras telas com sombras equivalentes."
+  ],
+  "critical_code_review_comments": [
+    "api.ts linha 19 usa o alias 'int' definido localmente (type int = number) — funcional, mas atípico; preferir 'number' direto para legibilidade.",
+    "localdb.ts persist() devolve a promise encadeada em writeChain — bom para serialização de escrita, mas se uma persist() rejeitar, as próximas também rejeitarão. Considerar .catch() entre writes para isolar falhas.",
+    "localdb.ts summary() usa comparação de strings de data (t.date < today, o.created_at >= startIso) — ok para ISO/'YYYY-MM-DD' porém frágil se formato mudar; documentar invariante.",
+    "upload.ts ainda usa fetch() (upload de foto). No app offline sem backend isso vai falhar se usuário anexar foto; verificar se o fluxo de foto é somente local (uri) e remover a chamada remota, ou tratar erro silenciosamente."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (not tested per request)", "frontend": "100% (todos os fluxos solicitados passaram; 0 chamadas /api observadas)"},
+  "seed_data_creation": "Durante o teste criei: inspeção no andar 4 com 1 problema de iluminação qtd=3; chave Maria TEST (apto 405 K-405) retirada e devolvida; tarefa 'Tarefa TEST'; ocorrência 'Occ TEST urgente'. Antes dos testes limpei o localStorage para começar do zero. A chave 'Carlos' (apto 302) mencionada no contexto não estava presente após o clear.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "App agora é 100% offline — testar via localStorage, não há backend em uso para o frontend. O storage é persistido em window.localStorage['zelador_db_v1'] no web. Antes de testar persistência, limpar localStorage para evitar leftovers. Pular câmera/galeria e share de PDF (web não suporta nativo). Viewport 390x844. Testes de upload.ts (fetch de imagem) não devem ser disparados no web — o fluxo não usa.",
+  "rca_of_issue": "N/A — nenhum defeito funcional. Apenas warnings de depreciação no RN Web (shadow*)."
+}

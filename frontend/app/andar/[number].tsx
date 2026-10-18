@@ -82,7 +82,7 @@ export default function AndarScreen() {
         })),
       })).data,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["floors"] });
+      qc.invalidateQueries({ queryKey: ["floors"], refetchType: "all" });
       qc.invalidateQueries({ queryKey: ["floor", floorNumber] });
       qc.invalidateQueries({ queryKey: ["floor-history", floorNumber] });
       qc.invalidateQueries({ queryKey: ["summary"] });
@@ -95,7 +95,7 @@ export default function AndarScreen() {
     mutationFn: async (item_id: string) =>
       (await api.post(`/floors/${floorNumber}/resolve-item`, { item_id, resolved: true })).data,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["floors"] });
+      qc.invalidateQueries({ queryKey: ["floors"], refetchType: "all" });
       qc.invalidateQueries({ queryKey: ["floor", floorNumber] });
       qc.invalidateQueries({ queryKey: ["summary"] });
     },

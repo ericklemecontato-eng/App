@@ -1,11 +1,5 @@
-import axios from "axios";
-
-const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
-export const api = axios.create({
-  baseURL: `${BASE_URL}/api`,
-  timeout: 15000,
-});
+// Todos os dados ficam salvos no próprio celular (sem servidor).
+export { api } from "./localdb";
 
 export type ChecklistItem = {
   id: string;

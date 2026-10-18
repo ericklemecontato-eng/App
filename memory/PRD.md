@@ -21,7 +21,12 @@ App mobile (pt-BR) para zelador de prédio residencial de 14 andares: controle d
 - Relatórios dia/semana/mês + PDF compartilhável
 - Testes: backend 26/26, frontend 100%
 
+## Update (2026-10-18) — Modo 100% offline
+- O usuário quer só o APK pessoal, sem deploy. Os dados agora ficam no aparelho: `src/localdb.ts` (AsyncStorage via `@/src/utils/storage`) imita as rotas antigas da API; `src/api.ts` reexporta esse módulo. O backend FastAPI não é mais usado pelo app.
+- Testado: zero chamadas de rede, os dados continuam salvos depois de recarregar (iteration_2).
+
 ## Backlog
+- P1: Backup/exportação e restauração dos dados (arquivo), já que tudo é local
 - P1: Elevadores (quinzenal), hidrantes/extintores (mensal), manutenções recorrentes com alertas
 - P1: Edição de ocorrências (status intermediários, responsável, prazo), seletor de data/hora nativo
 - P2: Cadastro de funcionários/prestadores, configurações do condomínio, backup/exportação, login com perfis
