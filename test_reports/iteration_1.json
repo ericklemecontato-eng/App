@@ -1,0 +1,27 @@
+{
+  "summary": "Zelador Pro MVP tested end-to-end. Backend: 26/26 pytest cases passed (condominium, 14 floors seed, inspections create+resolve-item, summary, keys checkout/return/duplicate-return 400, occurrences CRUD, routine CRUD + status completion_date, pool upsert/get-creates-default/list, reports overview daily/weekly/monthly). Frontend (mobile 390x844): Home shows date/condo name and all 9 action-* cards; Andares shows 14 floor-card-* with 14/14 visible; opening /andar/4, selecting 'problema' and saving updates badge to 'Com pendências' + numeric count; Chaves tab filters (keys-filter-all/pending/returned), new checkout form (field-employee_name/apartment/key_identifier/reason + submit-checkout) creates card showing 'Em posse'; opening card and submitting return (return-receiver + submit-return) flips to 'Devolvida'; Mais route works; Rotina creates task via btn-new-task→task-name→submit-task and toggle works; Piscina /piscina/{sat} loads with attended-sim, pool-provider, pool-save; Ocorrências creates via btn-new-occ→occ-title→submit-occ; Histórico shows hist-period-daily/weekly/monthly and gen-pdf button; stats correctly show Lâmpadas 7, Elétrica 3, Ocorrências 1 after flow. No deprecated expo packages. No React Native red screens.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_zelador.py", "/app/test_reports/pytest/results.xml"],
+  "action_items": [
+    "MINOR (optional): The review request lists Chaves filter testIDs as keys-filter-todas/em_posse/devolvidas, but the code uses keys-filter-all/pending/returned. The UI works correctly; update docs or rename for consistency.",
+    "MINOR: On /piscina/[date] save, router.back() emits a 'GO_BACK was not handled' console warning when the page is deep-linked (no history). Within the app's natural navigation (Mais → Piscina → Date) history exists so this does not surface. Consider router.replace('/piscina') as fallback."
+  ],
+  "critical_code_review_comments": [
+    "server.py keeps all code in a single ~620-line file; consider splitting routers (floors, keys, routine, pool, occurrences, reports) into separate modules as the app grows (>700 line threshold not reached yet).",
+    "pool POST returns raw dict with potential MongoDB _id leakage path exists in upsert branch — currently filtered via list-comprehension but relies on insert_one not re-setting _id into dict; works today but is fragile.",
+    "No input validation on inspection item category values (accepts any string). Consider Literal/Enum to prevent typos entering active_items."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Backend tests created TEST_* data (inspections on floors 7/8, keys TEST_John, occurrences TEST Occ, routine TEST Task, pool next Saturday). UI tests created TEST_UI_* data (floor 4 problem, key TEST_UI_Maria, task TEST_UI_Verificar portão, occurrence TEST_UI_Lampada hall, pool provider TEST_UI_Provider). All prefixed with TEST_ for identification.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "App has no auth. Backend URL in frontend/.env is EXPO_PUBLIC_BACKEND_URL. Mobile viewport 390x844. Pool scheduled_date must be a Saturday (compute offset from today's weekday). Floor inspection POST updates floor.active_items only with items having status='problema' and resolved=false. Second /keys/{id}/return returns 400. Chaves filter testIDs are keys-filter-all/pending/returned (NOT -todas/-em_posse/-devolvidas as in original brief). Camera/photo pickers and PDF sharing are native-only; skip on web.",
+  "rca_of_issue": "N/A — no failures found."
+}

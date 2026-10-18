@@ -1,0 +1,165 @@
+{
+  "app_name": "Zelador Pro",
+  "personality": "1 iOS-Native Clean",
+  "personality_one_liner": "Um aplicativo profissional e robusto para zeladores, focado em legibilidade rápida, alvos de toque amplos e gerenciamento eficiente de condomínios.",
+  "color": {
+    "surface": "#FFFFFF",
+    "onSurface": "#111827",
+    "surfaceSecondary": "#F3F4F6",
+    "onSurfaceSecondary": "#374151",
+    "surfaceTertiary": "#E5E7EB",
+    "onSurfaceTertiary": "#4B5563",
+    "surfaceInverse": "#111827",
+    "onSurfaceInverse": "#FFFFFF",
+    "brand": "#1D4ED8",
+    "onBrand": "#FFFFFF",
+    "brandPrimary": "#1D4ED8",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#DBEAFE",
+    "onBrandSecondary": "#1E40AF",
+    "brandTertiary": "#EFF6FF",
+    "onBrandTertiary": "#1D4ED8",
+    "success": "#10B981",
+    "onSuccess": "#FFFFFF",
+    "warning": "#F59E0B",
+    "onWarning": "#FFFFFF",
+    "error": "#EF4444",
+    "onError": "#FFFFFF",
+    "info": "#3B82F6",
+    "onInfo": "#FFFFFF",
+    "border": "#E5E7EB",
+    "borderStrong": "#D1D5DB",
+    "divider": "#F3F4F6",
+    "muted": "#6B7280"
+  },
+  "typography": {
+    "displayFontFamily": "Plus Jakarta Sans",
+    "textFontFamily": "Plus Jakarta Sans",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Generous spacing for large tap targets (glove-friendly). Lists and buttons must be min 56pt height.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20,
+    "pill": 999
+  },
+  "shadow_tier": "1",
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": "true",
+    "do's": [
+      "Use on bottom tab bar when content scrolls behind",
+      "Use on sticky headers or pinned filters",
+      "Use on floating action buttons (FAB) layered over lists"
+    ],
+    "dont's": [
+      "Never use on dense checklist rows",
+      "Never use on forms or primary text content"
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Início",
+      "purpose": "Dashboard 'Minha Rotina' mostrando data, status do condomínio, e 9 cartões de ação principais.",
+      "states": {
+        "loading": "Skeleton screen para os cartões e métricas principais.",
+        "empty": "N/A - O dashboard sempre exibe o estado atual (mesmo que tudo esteja zerado).",
+        "error": "Mensagem de erro amigável com botão 'Tentar novamente'."
+      },
+      "layout": "Cabeçalho com imagem do condomínio (hero) com scrim escuro e texto (Data/Nome) no topo. Abaixo, uma seção de Totais (Pendências, Chaves não devolvidas) usando scroll horizontal ou grid. O corpo principal é um Grid de 2 colunas para os 9 cartões de ação (ex: Andares, Chaves, Piscina, Ocorrências). Cada cartão deve ter toque generoso (mínimo 100pt de altura) com ícone em container colorido `brandTertiary`."
+    },
+    {
+      "name": "Andares",
+      "purpose": "Visualização dos 14 andares do prédio, destacando rapidamente quais têm pendências.",
+      "states": {
+        "loading": "Skeleton grid.",
+        "empty": "Nenhum andar cadastrado.",
+        "error": "Erro ao carregar andares."
+      },
+      "layout": "Layout em Grid de 2 colunas para os cartões de 1º a 14º andar. Cada cartão de andar exibe o número grande no centro, e um 'badge' de notificação (em vermelho/warning) no canto superior direito se houver pendências (contagem). Clicar no cartão leva ao 'Andar Individual'."
+    },
+    {
+      "name": "Andar Individual",
+      "purpose": "Checklist de inspeção multi-categoria (Iluminação, Hidráulica, etc.) para o andar selecionado.",
+      "states": {
+        "loading": "Skeleton list.",
+        "empty": "Checklist limpo.",
+        "error": "Falha ao carregar itens de inspeção."
+      },
+      "layout": "Lista vertical onde a linha inteira é clicável (altura mínima 56pt). Labels de status ficam abaixo do título da tarefa para evitar quebra horizontal. Botão 'Salvar/Finalizar' fixo (sticky) na parte inferior da tela (Thumb zone). Câmera/Fotos integradas nos itens via ícone lateral."
+    },
+    {
+      "name": "Chaves",
+      "purpose": "Livro de registro digital de chaves (check-in/check-out) destacando chaves não devolvidas.",
+      "states": {
+        "loading": "Skeleton list.",
+        "empty": "Ilustração (ou ícone com bg) informando 'Nenhuma chave emprestada'.",
+        "error": "Falha de rede ao puxar registros."
+      },
+      "layout": "Chips de filtro no topo (Todas, Emprestadas, Atrasadas). Lista de chaves abaixo (cartão com nome da chave, para quem está e há quanto tempo). No final da lista ou via FAB inferior, botões grandes: 'Registrar Retirada' e 'Registrar Devolução'."
+    },
+    {
+      "name": "Mais",
+      "purpose": "Menu secundário abrigando Piscina (Sábados), Relatórios em PDF, e Ocorrências gerais.",
+      "states": {
+        "loading": "Skeleton list.",
+        "empty": "N/A",
+        "error": "N/A"
+      },
+      "layout": "Lista padrão nativa com chevrons (estilo Settings do iOS). Cada linha deve ter altura confortável de toque (56pt min). Ícones do lado esquerdo encapsulados em formas arredondadas com fundo `surfaceSecondary`."
+    }
+  ],
+  "images": {
+    "condo_hero": {
+      "url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBhcGFydG1lbnQlMjBidWlsZGluZyUyMGV4dGVyaW9yfGVufDB8fHx8MTc5MjM1MjA2MXww&ixlib=rb-4.1.0&q=85",
+      "alt": "Exterior moderno de um prédio residencial"
+    },
+    "keys_hero": {
+      "url": "https://images.unsplash.com/photo-1575908539614-ff89490f4a78?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwyfHxrZXlzJTIwYnVuY2h8ZW58MHx8fHwxNzkyMzUyMDYxfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Molho de chaves de metal"
+    },
+    "pool_hero": {
+      "url": "https://images.unsplash.com/photo-1557459325-b6733cbeae9c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBjbGVhbnxlbnwwfHx8fDE3OTIzNTIwNjF8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Piscina com água limpa e azul"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the 'Azul profissional + cinza' palette requested by the user. Do not use generic purple/indigo.",
+    "No emojis are allowed. Use high-quality vector icons from the Phosphor set only.",
+    "All labels, placeholders, and error messages MUST be in Brazilian Portuguese (pt-BR).",
+    "Glove-friendly design: Enforce large tap targets on all interactive elements. Buttons and list rows must have a minimum height of 56pt.",
+    "Implement a gradient scrim (top to bottom, transparent to ≥70% surfaceInverse) on the Condo Hero image so white text overlays cleanly and maintains WCAG contrast.",
+    "For the 14-floor grid, use a dynamic 2-column layout to fit mobile screens efficiently. Badges should visually pop (using the 'warning' or 'error' colors) to instantly inform the caretaker of pending issues.",
+    "On the individual floor checklist, ensure the 'Save' button is anchored (sticky) at the bottom above the safe area, so it's always reachable without scrolling.",
+    "Never use purely decorative graphics on dense data screens; rely on real image fetching and clear typography for layout."
+  ]
+}
